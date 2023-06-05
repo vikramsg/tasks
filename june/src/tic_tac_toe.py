@@ -1,14 +1,12 @@
+from functools import partial
 from typing import Optional, Tuple
+
 import click
 import numpy as np
-from functools import partial
-
-_PLAYER_TO_NUMBER = {"o": 1, "x": 2}
-_NEXT_PLAYER = {"o": "x", "x": "o"}
 
 
 def _convert_to_tic_tac_toe_input(
-    value: str, game_board: np.array
+    value: str, game_board: np.ndarray
 ) -> Optional[Tuple[int, int]]:
     try:
         values = value.split(",")
@@ -38,16 +36,27 @@ def _convert_to_tic_tac_toe_input(
             )
         else:
             raise click.BadParameter(
-                "Invalid input. Please enter two comma-separated integers with each integer between 0 and 2."
+                "Invalid input."
+                "Please enter two comma-separated integers with each integer between 0 and 2."
             )
 
 
-def _is_game_over(game_board: np.array, position: Tuple[int, int]) -> None:
-    # Return bool
-    pass
+def _is_game_over(
+    game_board: np.ndarray, position: Tuple[int, int], player_id: int
+) -> int:
+    if np.all(game_board[position[0], :] == player_id):
+        return 1
+    if np.all(game_board[:, position[1]] == player_id):
+        return 1
+    if np.sum(position) == 2 or position[0] == position[1]:
+        if np.all(np.diag(game_board) == player_id):
+            return 1
+        if np.all(np.diag(np.fliplr(game_board)) == player_id):
+            return 1
+    return 0
 
 
-def _show_game_board(game_board: np.array) -> None:
+def _show_game_board(game_board: np.ndarray) -> None:
     show_game_board_dict = {0: " ", 1: "X", 2: "O"}
 
     print("Game Board status")
@@ -61,7 +70,7 @@ def _show_game_board(game_board: np.array) -> None:
 
 
 @click.command()
-def game_loop():
+def game_loop() -> None:
     starting_player = click.prompt(
         "Enter starting input choice. It can be either 'o' or 'x'.",
         type=click.Choice(["o", "x"]),
@@ -86,6 +95,9 @@ def game_loop():
 
         game_board[coordinates] = player_to_number_dict[next_player]
         _show_game_board(game_board)
+        if _is_game_over(game_board, coordinates, player_to_number_dict[next_player]):
+            print(f"Game over. Player {next_player} won.")
+            return
 
         next_player = next_player_dict[next_player]
 
