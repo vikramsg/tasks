@@ -1,9 +1,10 @@
-from typing import List
+from typing import List, Tuple
+import numpy as np
 
 import pytest
 from click import testing as click_testing
 
-from src.tic_tac_toe import game_loop
+from src.tic_tac_toe import _is_game_over, game_loop
 
 
 @pytest.mark.parametrize(
@@ -78,4 +79,36 @@ def test_click_invalid_input_handling(moves: List[str], expected_msg: str) -> No
     assert expected_msg in result.output
 
 
-# ToDo, test every combination for game over check
+@pytest.mark.parametrize(
+    "indices, position, expected_result",
+    [
+        # Rows
+        ((0, slice(3)), (0, 2), 1),
+        ((1, slice(3)), (1, 2), 1),
+        ((2, slice(3)), (2, 2), 1),
+        ((2, slice(2)), (2, 1), 0),
+        # Columns
+        ((slice(3), 0), (2, 0), 1),
+        ((slice(3), 1), (2, 1), 1),
+        ((slice(3), 2), (2, 2), 1),
+        ((slice(2), 2), (1, 2), 0),
+        # Diagonal
+        (((0, 1, 2), (0, 1, 2)), (1, 1), 1),
+        (((0, 1), (0, 1)), (1, 1), 0),
+        # Off diagonal
+        (((0, 1, 2), (2, 1, 0)), (1, 1), 1),
+        (((0, 1), (2, 1)), (1, 1), 0),
+    ],
+)
+def test_game_over(
+    indices: Tuple, position: Tuple[int, int], expected_result: int
+) -> None:
+    # Given
+    board = np.zeros((3, 3))
+    board[indices] = 1
+
+    # When
+    result = _is_game_over(board, position, 1)
+
+    # Then
+    assert result == expected_result
