@@ -1,6 +1,6 @@
 from typing import List, Tuple
-import numpy as np
 
+import numpy as np
 import pytest
 from click import testing as click_testing
 
