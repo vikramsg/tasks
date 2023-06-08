@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 import click
 import numpy as np
@@ -10,6 +10,11 @@ def _convert_to_tic_tac_toe_input(
 ) -> Optional[Tuple[int, int]]:
     try:
         values = value.split(",")
+        try:
+            assert len(values) == 2
+        except AssertionError:
+            raise ValueError("Please enter exactly two comma-separated integers.")
+
         tuple_values = (int(values[0]), int(values[1]))
 
         assert tuple_values[0] >= 0 and tuple_values[0] < 3
@@ -18,27 +23,24 @@ def _convert_to_tic_tac_toe_input(
         try:
             assert game_board[tuple_values] == 0
         except AssertionError:
-            raise AssertionError("Position already occupied. Chose different position")
+            raise ValueError("Position already occupied. Chose different position")
 
         return tuple_values
-    except ValueError:
-        raise click.BadParameter(
-            "Invalid input. Please enter two comma-separated integers."
-        )
-    except IndexError:
-        raise click.BadParameter(
-            "Invalid input. Please enter exactly two comma-separated integers."
-        )
-    except AssertionError as e:
+    except ValueError as e:
         if "Position already occupied" in e.args[0]:
             raise click.BadParameter(
                 "Invalid input. Position already occupied. Chose different position."
             )
-        else:
+        elif "Please enter exactly two comma-separated integers." in e.args[0]:
             raise click.BadParameter(
-                "Invalid input."
-                "Please enter two comma-separated integers with each integer between 0 and 2."
+                "Invalid input. Please enter exactly two comma-separated integers between 0 and 2."
             )
+
+    except AssertionError:
+        raise click.BadParameter(
+            "Invalid input. "
+            "Please enter two comma-separated integers with each integer between 0 and 2."
+        )
 
 
 def _is_game_over(
@@ -56,9 +58,9 @@ def _is_game_over(
     return 0
 
 
-def _show_game_board(game_board: np.ndarray) -> None:
-    show_game_board_dict = {0: " ", 1: "X", 2: "O"}
-
+def _show_game_board(
+    game_board: np.ndarray, show_game_board_dict: Dict[int, str]
+) -> None:
     print("Game Board status")
     line_splitter = "-------------"
     print(line_splitter)
@@ -82,6 +84,7 @@ def game_loop() -> int:
     next_player = starting_player
     game_board = np.zeros((3, 3), dtype=np.short)
     player_to_number_dict = {"o": 1, "x": 2}
+    show_game_board_dict = {0: " ", 1: "o", 2: "x"}
     next_player_dict = {"o": "x", "x": "o"}
 
     moves_counter = 0
@@ -97,7 +100,7 @@ def game_loop() -> int:
         )
 
         game_board[coordinates] = player_to_number_dict[next_player]
-        _show_game_board(game_board)
+        _show_game_board(game_board, show_game_board_dict)
         if _is_game_over(game_board, coordinates, player_to_number_dict[next_player]):
             print(f"Game over. Player {next_player} won.")
             return 1
