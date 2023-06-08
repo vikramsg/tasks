@@ -76,3 +76,6 @@ def test_click_invalid_input_handling(moves: List[str], expected_msg: str) -> No
 
     # Then
     assert expected_msg in result.output
+
+
+# ToDo, test every combination for game over check
