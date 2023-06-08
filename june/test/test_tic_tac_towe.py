@@ -1,7 +1,9 @@
 from typing import List
-from src.tic_tac_toe import game_loop
+
 import pytest
 from click import testing as click_testing
+
+from src.tic_tac_toe import game_loop
 
 
 @pytest.mark.parametrize(
@@ -33,7 +35,7 @@ from click import testing as click_testing
         ),
     ],
 )
-def test_game_play(moves: List[str], expected_msg) -> None:
+def test_game_play(moves: List[str], expected_msg: str) -> None:
     # Given
     test_runner = click_testing.CliRunner()
 
@@ -65,7 +67,7 @@ def test_game_play(moves: List[str], expected_msg) -> None:
         ),
     ],
 )
-def test_click_invalid_input_handling(moves: List[str], expected_msg) -> None:
+def test_click_invalid_input_handling(moves: List[str], expected_msg: str) -> None:
     # Given
     test_runner = click_testing.CliRunner()
 

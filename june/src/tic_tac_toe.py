@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Dict, Optional, Tuple
+from typing import Dict, Tuple
 
 import click
 import numpy as np
@@ -7,7 +7,7 @@ import numpy as np
 
 def _convert_to_tic_tac_toe_input(
     value: str, game_board: np.ndarray
-) -> Optional[Tuple[int, int]]:
+) -> Tuple[int, int]:
     try:
         values = value.split(",")
         try:
@@ -25,7 +25,6 @@ def _convert_to_tic_tac_toe_input(
         except AssertionError:
             raise ValueError("Position already occupied. Chose different position")
 
-        return tuple_values
     except ValueError as e:
         if "Position already occupied" in e.args[0]:
             raise click.BadParameter(
@@ -41,6 +40,8 @@ def _convert_to_tic_tac_toe_input(
             "Invalid input. "
             "Please enter two comma-separated integers with each integer between 0 and 2."
         )
+
+    return tuple_values
 
 
 def _is_game_over(
