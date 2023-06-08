@@ -17,8 +17,8 @@ lint:
 	./linter.sh
 	
 install:
-	poetry install	
-	source "$(poetry env info --path)"/bin/activate
-	
+	poetry install --no-root
+	poetry shell
+
 run:
 	poetry run python -m src.tic_tac_toe 
