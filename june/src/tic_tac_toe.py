@@ -73,7 +73,7 @@ def _show_game_board(
 
 
 @click.command()
-def game_loop() -> int:
+def game_loop() -> None:
     """
     Game loop that runs each move and outputs the game board.
     It stops if the board is full or if a player has won.
