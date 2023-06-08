@@ -72,11 +72,13 @@ def _show_game_board(
         print(f"{row_str}\n{line_splitter}")
 
 
-# def _single_move() -> None:
-
-
 @click.command()
 def game_loop() -> int:
+    """
+    Game loop that runs each move and outputs the game board.
+    It stops if the board is full or if a player has won.
+    If a player wins, it reports which player has won.
+    """
     starting_player = click.prompt(
         "Enter starting input choice",
         type=click.Choice(["o", "x"]),
@@ -104,14 +106,14 @@ def game_loop() -> int:
         _show_game_board(game_board, show_game_board_dict)
         if _is_game_over(game_board, coordinates, player_to_number_dict[next_player]):
             print(f"Game over. Player {next_player} won.")
-            return 1
+            return
 
         next_player = next_player_dict[next_player]
 
         moves_counter += 1
         if moves_counter == 9:
             print("Game finished in a draw. Try again.")
-            return 0
+            return
 
 
 if __name__ == "__main__":
