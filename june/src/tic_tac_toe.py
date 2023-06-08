@@ -72,7 +72,7 @@ def _show_game_board(game_board: np.ndarray) -> None:
 @click.command()
 def game_loop() -> None:
     starting_player = click.prompt(
-        "Enter starting input choice. It can be either 'o' or 'x'.",
+        "Enter starting input choice",
         type=click.Choice(["o", "x"]),
     )
 
