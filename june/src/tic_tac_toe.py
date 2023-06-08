@@ -69,8 +69,11 @@ def _show_game_board(game_board: np.ndarray) -> None:
         print(f"{row_str}\n{line_splitter}")
 
 
+# def _single_move() -> None:
+
+
 @click.command()
-def game_loop() -> None:
+def game_loop() -> int:
     starting_player = click.prompt(
         "Enter starting input choice",
         type=click.Choice(["o", "x"]),
@@ -97,14 +100,14 @@ def game_loop() -> None:
         _show_game_board(game_board)
         if _is_game_over(game_board, coordinates, player_to_number_dict[next_player]):
             print(f"Game over. Player {next_player} won.")
-            return
+            return 1
 
         next_player = next_player_dict[next_player]
 
         moves_counter += 1
         if moves_counter == 9:
             print("Game finished in a draw. Try again.")
-            return
+            return 0
 
 
 if __name__ == "__main__":
