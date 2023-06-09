@@ -30,10 +30,6 @@ from src.tic_tac_toe import _is_game_over, game_loop
             ["o", "0,0", "2,1", "0,1", "0,2", "1,1", "2,2", "1,0", "2,0"],
             "Game over. Player x won.",
         ),
-        (
-            ["o", "0,0", "2,1", "0,1", "0,2", "1,1", "2,2", "1,0", "2,0"],
-            "Game over. Player x won.",
-        ),
     ],
 )
 def test_game_play(moves: List[str], expected_msg: str) -> None:
