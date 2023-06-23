@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 from click import testing as click_testing
 
-from src.tic_tac_toe import _is_game_over, game_loop
+from src.tic_tac_toe import _is_game_over, _make_computer_move, game_loop
 
 
 @pytest.mark.parametrize(
@@ -108,3 +108,50 @@ def test_game_over(
 
     # Then
     assert result == expected_result
+
+
+@pytest.mark.parametrize(
+    "indices, player, expected_result",
+    [
+        # Rows
+        ((0, slice(2)), 1, (0, 2)),
+        ((slice(2), 0), 1, (2, 0)),
+        (((0, 1), (0, 1)), 1, (2, 2)),
+        (((0, 1), (2, 1)), 1, (2, 0)),
+    ],
+)
+def test_make_computer_move(indices, player, expected_result):
+    # Given
+    game_board = np.zeros((3, 3), dtype=np.short)
+
+    # We want the computer to select 0, 2
+    game_board[indices] = player
+
+    # When
+    (row, col) = _make_computer_move(game_board, player)
+
+    # Then
+    assert (row, col) == expected_result
+
+
+@pytest.mark.parametrize(
+    "indices, player, expected_result",
+    [
+        # Rows
+        ((0, slice(2)), 1, (0, 2)),
+    ],
+)
+def test_make_computer_move(indices, player, expected_result):
+    # Given
+    game_board = np.zeros((3, 3), dtype=np.short)
+
+    not_player = 1 if player == 2 else 2
+
+    # We want the computer to select 0, 2
+    game_board[indices] = not_player
+
+    # When
+    (row, col) = _make_computer_move(game_board, player)
+
+    # Then
+    assert (row, col) == expected_result
