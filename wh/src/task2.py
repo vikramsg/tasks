@@ -167,35 +167,29 @@ def _calculate_commission(row):
 def _monthly_commision(df: pd.DataFrame) -> None:
     df["month"] = df["order_date"].dt.to_period("M")
 
-    monthly_orders = (
-        df.groupby(["month", "provider"])["order_count"].sum().reset_index()
+    monthly_revenue_product = (
+        df.groupby(["month", "provider", "product"])["revenue"].sum().reset_index()
+    )
+    monthly_orders_product = (
+        df.groupby(["month", "provider", "product"])["order_count"].sum().reset_index()
     )
 
-    monthly_orders["commission"] = monthly_orders.apply(_calculate_commission, axis=1)
-
-    data_with_commission = pd.merge(
-        df, monthly_orders, how="left", on=["month", "provider"]
+    merged_monthly_orders = pd.merge(
+        monthly_orders_product,
+        monthly_revenue_product,
+        how="inner",
+        on=["month", "provider", "product"],
+    )
+    merged_monthly_orders["commission"] = merged_monthly_orders.apply(
+        _calculate_commission, axis=1
     )
 
-    # Calculate the total commission for each product
-    product_commissions = (
-        data_with_commission.groupby("product")["commission"].sum().reset_index()
+    merged_monthly_orders["gross_margin"] = (
+        merged_monthly_orders["revenue"] - merged_monthly_orders["commission"]
     )
+    mg = merged_monthly_orders.groupby(["month", "product"]).sum().reset_index()
 
-    product_revenue = (
-        data_with_commission.groupby("product")["revenue"].sum().reset_index()
-    )
-
-    # Merge this with the product stats data (which contains the total revenue)
-    product_stats_with_commissions = pd.merge(
-        product_revenue, product_commissions, on="product"
-    )
-
-    # Calculate the gross margin for each product
-    product_stats_with_commissions["gross_margin"] = (
-        product_stats_with_commissions["revenue"]
-        - product_stats_with_commissions["commission"]
-    )
+    print(mg[["month", "product", "commission", "gross_margin"]])
 
 
 @click.command()
@@ -214,14 +208,14 @@ def eda_data(file_name: str):
     # Convert order_date to datetime
     data["order_date"] = pd.to_datetime(data["order_date"])
 
-    print("Data Aggregrates")
-    _data_aggregrates(data)
+    # print("Data Aggregrates")
+    # _data_aggregrates(data)
 
-    print("Data Average")
-    _data_average(data)
+    # print("Data Average")
+    # _data_average(data)
 
-    print("Sales trends")
-    _sales_trend(data)
+    # print("Sales trends")
+    # _sales_trend(data)
 
     print("Commission")
     _monthly_commision(data)
