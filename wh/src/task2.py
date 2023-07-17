@@ -208,14 +208,14 @@ def eda_data(file_name: str):
     # Convert order_date to datetime
     data["order_date"] = pd.to_datetime(data["order_date"])
 
-    # print("Data Aggregrates")
-    # _data_aggregrates(data)
+    print("Data Aggregrates")
+    _data_aggregrates(data)
 
-    # print("Data Average")
-    # _data_average(data)
+    print("Data Average")
+    _data_average(data)
 
-    # print("Sales trends")
-    # _sales_trend(data)
+    print("Sales trends")
+    _sales_trend(data)
 
     print("Commission")
     _monthly_commision(data)
