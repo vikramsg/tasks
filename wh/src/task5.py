@@ -1,26 +1,24 @@
+from typing import List
 import pandas as pd
 import numpy as np
 
-# Read the dataset
-df = pd.read_csv(
-    "your_dataset.csv"
-)  # Replace 'your_dataset.csv' with the path to your dataset
 
-# Count the number of users liking each fruit
-fruit_counts = df["favorite_fruit"].value_counts()
+def _distribution_original_data(file_name: str):
+    df = pd.read_csv(file_name)
 
-# Display the distribution of number of users liking each fruit
-print(fruit_counts)
+    return df["favorite_fruit"].value_counts()
 
-# Assuming you have another dataset with the same schema
-another_df = pd.read_csv(
-    "another_dataset.csv"
-)  # Replace 'another_dataset.csv' with the path to your another dataset
 
-# Sample from another dataset based on the distribution of the original dataset
-sampled_df = another_df.sample(
-    n=len(df), replace=True, weights=fruit_counts[df["favorite_fruit"]].values
-)
+def sample_from_data(file_name: str, distribution: List[int], n_samples: int):
+    df = pd.read_csv(file_name)
 
-# Display the sampled DataFrame
-print(sampled_df)
+    # Sample from another dataset based on the distribution of the original dataset
+    sampled_df = df.sample(n=n_samples, replace=True, weights=distribution)
+
+    # Display the sampled DataFrame
+    print(sampled_df)
+
+
+if __name__ == "__main__":
+    distribution = _distribution_original_data("data/origin_data.csv")
+    sample_from_data("data/data_to_sample.csv", distribution, 5000)
