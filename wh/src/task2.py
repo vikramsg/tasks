@@ -42,7 +42,6 @@ def _bar_plot_figure(
 
 
 def _data_aggregrates(df: pd.DataFrame) -> None:
-    # Number of unique products and providers
     num_unique_products = df["product"].nunique()
     num_unique_providers = df["provider"].nunique()
 
@@ -50,7 +49,6 @@ def _data_aggregrates(df: pd.DataFrame) -> None:
         f"Number of unique products: {num_unique_products}, Number of unique providers: {num_unique_providers}"
     )
 
-    # Total revenue and order count for each product
     print("Total revenue and order count by product")
     product_stats = (
         df.groupby("product")
@@ -72,7 +70,6 @@ def _data_aggregrates(df: pd.DataFrame) -> None:
         "Total order count for product",
     )
 
-    # Total revenue and order count for each provider
     print("Total revenue and order count by provider")
     provider_stats = (
         df.groupby("provider")
@@ -99,7 +96,7 @@ def _data_average(df: pd.DataFrame) -> None:
     # Remove rows where order_count is zero and revenue is not zero
     df = df[~((df["order_count"] == 0) & (df["revenue"] != 0))]
 
-    # Recalculate average order value by product
+    # Calculate average order value by product
     df["avg_order_value"] = df["revenue"] / df["order_count"]
     avg_order_value_by_product = (
         df.groupby("product")["avg_order_value"].mean().reset_index()
@@ -112,7 +109,7 @@ def _data_average(df: pd.DataFrame) -> None:
         "Average revenue for product",
     )
 
-    # Recalculate average order value by provider
+    # Calculate average order value by provider
     df["avg_order_value"] = df["revenue"] / df["order_count"]
     avg_order_value_by_provider = (
         df.groupby("provider")["avg_order_value"].mean().reset_index()
@@ -127,7 +124,6 @@ def _data_average(df: pd.DataFrame) -> None:
 
 
 def _sales_trend(df: pd.DataFrame) -> None:
-    # Add a 'week' column to the data, representing the week of the order date
     df["week"] = df["order_date"].dt.to_period("W")
 
     # Calculate the weekly revenue for each product
@@ -219,10 +215,8 @@ def _monthly_commision(df: pd.DataFrame) -> None:
 def eda_data(file_name: str):
     data = _read_csv(file_name)
 
-    # Remove comma from revenue and convert to number
     data["revenue"] = data["revenue"].str.replace(",", "").astype(float)
 
-    # Convert order_date to datetime
     data["order_date"] = pd.to_datetime(data["order_date"])
 
     print("Data Aggregrates")
