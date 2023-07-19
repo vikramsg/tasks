@@ -112,6 +112,19 @@ def _data_average(df: pd.DataFrame) -> None:
         "Average revenue for product",
     )
 
+    # Recalculate average order value by provider
+    df["avg_order_value"] = df["revenue"] / df["order_count"]
+    avg_order_value_by_provider = (
+        df.groupby("provider")["avg_order_value"].mean().reset_index()
+    )
+    _bar_plot_figure(
+        avg_order_value_by_provider,
+        "provider",
+        "avg_order_value",
+        "data/average_revenue_provider.png",
+        "Average revenue for provider",
+    )
+
 
 def _sales_trend(df: pd.DataFrame) -> None:
     # Add a 'week' column to the data, representing the week of the order date
@@ -126,7 +139,9 @@ def _sales_trend(df: pd.DataFrame) -> None:
     )
 
     _time_series_figure(
-        pivot_df_product, "data/weekly_trend_products.png", "Product weekly trend"
+        pivot_df_product,
+        "data/weekly_trend_products.png",
+        "Product weekly trend: Revenue",
     )
 
     # Calculate the weekly revenue for each provider
@@ -138,7 +153,9 @@ def _sales_trend(df: pd.DataFrame) -> None:
     )
 
     _time_series_figure(
-        pivot_df_provider, "data/weekly_trend_provider.png", "Provider weekly trend"
+        pivot_df_provider,
+        "data/weekly_trend_provider.png",
+        "Provider weekly trend: Revenue",
     )
 
 
@@ -189,7 +206,7 @@ def _monthly_commision(df: pd.DataFrame) -> None:
     )
     mg = merged_monthly_orders.groupby(["month", "product"]).sum().reset_index()
 
-    print(mg[["month", "product", "commission", "gross_margin"]])
+    print(mg[["month", "product", "revenue", "commission", "gross_margin"]])
 
 
 @click.command()

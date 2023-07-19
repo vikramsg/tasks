@@ -1,11 +1,16 @@
 SELECT id, first_name, last_name 
-FROM customers  
-WHERE id IN (
-        SELECT orders.customer_id FROM orders  
-        WHERE orders.created_at >= NOW() - INTERVAL '24 hours'
-        GROUP BY orders.customer_id 
-        HAVING MIN(orders.created_at) >= NOW() - INTERVAL '24 hours'
-    );
+FROM customers
+WHERE id IN 
+(
+    SELECT customer_id 
+    FROM 
+    (
+       SELECT customer_id, MIN(created_at) 
+       FROM orders
+       GROUP BY customer_id 
+       HAVING MIN(created_at) >= NOW() - INTERVAL '24 hours'
+    ) AS ord 
+)
 
 
 SELECT id, first_name, last_name 
