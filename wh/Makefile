@@ -14,3 +14,9 @@ install:
 
 task2: 
 	python -m src.task2 --file-name=data/commission_dataset.csv
+	
+task5: 
+	python -m src.task2 --file-name=data/commission_dataset.csv
+	
+task6: 
+	python -m src.task6 

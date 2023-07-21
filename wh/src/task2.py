@@ -1,9 +1,9 @@
 import click
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
-def _read_csv(file: str) -> None:
+def _read_csv(file: str) -> pd.DataFrame:
     return pd.read_csv(file)
 
 
@@ -155,9 +155,9 @@ def _sales_trend(df: pd.DataFrame) -> None:
     )
 
 
-def _calculate_commission(row):
-    provider = row["provider"]
-    order_count = row["order_count"]
+def _calculate_commission(row: pd.Series) -> int:
+    provider = int(row["provider"])
+    order_count = int(row["order_count"])
 
     if provider == "tom_jerry":
         return 8000
@@ -175,6 +175,8 @@ def _calculate_commission(row):
             return 50 * 200 + 40 * (order_count - 200)
         else:
             return 50 * 200 + 40 * 200 + 30 * (order_count - 400)
+    else:
+        raise ValueError("Providers not supported")
 
 
 def _monthly_commision(df: pd.DataFrame) -> None:
@@ -212,7 +214,7 @@ def _monthly_commision(df: pd.DataFrame) -> None:
     help="Name of csv file in data folder.",
     required=True,
 )
-def eda_data(file_name: str):
+def eda_data(file_name: str) -> None:
     data = _read_csv(file_name)
 
     data["revenue"] = data["revenue"].str.replace(",", "").astype(float)
