@@ -97,12 +97,16 @@ def _data_average(df: pd.DataFrame) -> None:
     df = df[~((df["order_count"] == 0) & (df["revenue"] != 0))]
 
     # Calculate average order value by product
-    df["avg_order_value"] = df["revenue"] / df["order_count"]
-    avg_order_value_by_product = (
-        df.groupby("product")["avg_order_value"].mean().reset_index()
+    product_stats = (
+        df.groupby("product")
+        .agg({"revenue": "sum", "order_count": "sum"})
+        .reset_index()
+    )
+    product_stats["avg_order_value"] = (
+        product_stats["revenue"] / product_stats["order_count"]
     )
     _bar_plot_figure(
-        avg_order_value_by_product,
+        product_stats,
         "product",
         "avg_order_value",
         "data/average_revenue_product.png",
@@ -110,12 +114,16 @@ def _data_average(df: pd.DataFrame) -> None:
     )
 
     # Calculate average order value by provider
-    df["avg_order_value"] = df["revenue"] / df["order_count"]
-    avg_order_value_by_provider = (
-        df.groupby("provider")["avg_order_value"].mean().reset_index()
+    provider_stats = (
+        df.groupby("provider")
+        .agg({"revenue": "sum", "order_count": "sum"})
+        .reset_index()
+    )
+    provider_stats["avg_order_value"] = (
+        provider_stats["revenue"] / provider_stats["order_count"]
     )
     _bar_plot_figure(
-        avg_order_value_by_provider,
+        provider_stats,
         "provider",
         "avg_order_value",
         "data/average_revenue_provider.png",
@@ -156,7 +164,7 @@ def _sales_trend(df: pd.DataFrame) -> None:
 
 
 def _calculate_commission(row: pd.Series) -> int:
-    provider = int(row["provider"])
+    provider = row["provider"]
     order_count = int(row["order_count"])
 
     if provider == "tom_jerry":
