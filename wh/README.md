@@ -23,7 +23,7 @@ make install
 
 ## Tests
 
-The project has static checks, which checks for formatting and typing and unit tests.
+The project has static checks, which checks for formatting and typing.
 
 Invoke static checks using
 
@@ -31,19 +31,13 @@ Invoke static checks using
 make check
 ```
 
-and tests using
-
-```
-make test
-```
+Tests will come in the future.
 
 
 ## Run
 
-The game can be run by doing
+Run a city using
 
 ```
-make run
+make city_journeys CITY=Hamburg 
 ```
-
-Game play instructions are prompted on the screen.
