@@ -20,6 +20,9 @@ def _time_series_figure(df: pd.DataFrame, filename: str, title: str) -> None:
     plt.margins(x=0, y=0.1)
     plt.tight_layout()
 
+    ymin, ymax = plt.ylim()
+    plt.ylim(ymin, ymax * 1.2)
+
     plt.savefig(filename)
 
 
