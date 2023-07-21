@@ -21,23 +21,23 @@ Once you have Poetry setup, you can simply go to the root of the directory and d
 make install
 ```
 
-## Tests
-
-The project has static checks, which checks for formatting and typing.
-
-Invoke static checks using
-
-```
-make check
-```
-
-Tests will come in the future.
-
-
 ## Run
 
-Run a city using
+
+Task 2 and Task 3
 
 ```
-make city_journeys CITY=Hamburg 
+make task2 
+```
+
+Task 5 
+
+```
+make task5 
+```
+
+Task 6 
+
+```
+make task6 
 ```

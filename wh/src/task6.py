@@ -1,8 +1,9 @@
-from typing import Dict, List
+from typing import Any, Dict, List
+
 import requests
 
 
-def _get_todo_response(url: str) -> List[Dict]:
+def _get_todo_response(url: str) -> Any:
     response = requests.get(url)
 
     return response.json()
